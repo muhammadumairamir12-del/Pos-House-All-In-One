@@ -29,7 +29,6 @@
     <script type="module">
         // Firebase Configuration
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, updateDoc, doc, getDoc, setDoc, serverTimestamp, onSnapshot, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
         import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 
@@ -43,14 +42,11 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // Make globally available
-        window.firebase = { auth, db, storage,
-            createUserWithEmailAndPassword, signInWithEmailAndPassword,
-            onAuthStateChanged, signOut,
+        // Make globally available (excluding auth-related functions)
+        window.firebase = { db, storage,
             collection, addDoc, getDocs, query, where, orderBy,
             updateDoc, doc, getDoc, setDoc, serverTimestamp, onSnapshot, deleteDoc,
             ref, uploadBytes, getDownloadURL
@@ -660,6 +656,11 @@
             #khanModernCarousel h1 { font-size: 3.5rem; }
             #khanModernCarousel p { font-size: 1.1rem; }
 
+            #khanModernCarousel .carousel-item {
+                min-height: 600px; /* Adjusted for better mobile behavior */
+                height: auto;
+            }
+
             .slide-design-1 .hero-image-col,
             .slide-design-3 .hero-image-col,
             .slide-design-5 .hero-image-col,
@@ -787,79 +788,6 @@
             font-size: 1.1rem;
             line-height: 1.8;
             color: var(--gray);
-        }
-
-        /* Video Section */
-        .video-section {
-            padding: 80px 0;
-            background-color: #f8f9fa;
-        }
-
-        .video-section .section-title .subtitle {
-            font-size: 1.1rem;
-            color: #6c757d;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .video-section .section-title h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #343a40;
-            margin-bottom: 0;
-        }
-
-        .video-description {
-            font-size: 1.1rem;
-            color: #555;
-            line-height: 1.8;
-        }
-
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            background-color: #000;
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        .video-caption {
-            text-align: center;
-            font-size: 0.95rem;
-            color: #6c757d;
-            margin-top: -10px;
-            margin-bottom: 30px;
-        }
-        .video-section iframe {
-            width: 100%;
-            height: 100%;
-            border-radius: 12px;
-        }
-
-        /* Responsive adjustments for video section */
-        @media (max-width: 768px) {
-            .video-section .section-title h2 {
-                font-size: 2rem;
-            }
-            .video-description {
-                font-size: 1rem;
-            }
-            .video-caption {
-                font-size: 0.85rem;
-            }
         }
 
         /* Doctors Section */
@@ -1567,6 +1495,10 @@
             background: #25D366;
         }
 
+        .floating-btn.sms { /* New style for SMS button */
+            background: #007bff; /* A blue, you can adjust */
+        }
+
         .floating-btn:hover {
             transform: scale(1.1);
             animation: none;
@@ -1849,9 +1781,6 @@
                     <li class="nav-item"><a class="nav-link" href="#appointment">Appointment</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                 </ul>
-                <button class="nav-btn btn-primary-custom" onclick="userAuthAction()" id="patientAuthBtn">
-                    <i class="fas fa-user"></i> Patient Login
-                </button>
             </div>
         </div>
     </nav>
@@ -1892,9 +1821,16 @@
                                     <a href="#services" class="btn-hero animate__animated animate__zoomIn animate__delay-1s">Meet Our Doctors <i class="fas fa-user-md ms-2"></i></a>
                                 </div>
                                 <div class="col-lg-6 hero-image-col slide-1-images animate__animated animate__fadeInRight animate__delay-0-5s">
-                                    <div class="hero-image-frame slide-1-main-img" data-bs-toggle="modal" data-bs-target="#imageFullscreenModal" data-bs-src="https://images.pexels.com/photos/27059205/pexels-photo-27059205.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750">
-                                        <img src="https://images.pexels.com/photos/27059205/pexels-photo-27059205.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750" alt="Doctor preparing for surgery" loading="lazy">
-                                    </div>
+                                  <div class="hero-image-frame slide-1-main-img">
+    <a href="https://i.ibb.co/rRKg6m77/Whats-App-Image-2026-01-24-at-11-29-52-PM.jpg" target="_blank">
+        <img 
+            src="https://i.ibb.co/rRKg6m77/Whats-App-Image-2026-01-24-at-11-29-52-PM.jpg"
+            alt="Doctor preparing for surgery"
+            loading="lazy"
+        >
+    </a>
+</div>
+
                                     <div class="hero-image-frame slide-1-detail-img" data-bs-toggle="modal" data-bs-target="#imageFullscreenModal" data-bs-src="https://images.pexels.com/photos/7904474/pexels-photo-7904474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750">
                                         <img src="https://images.pexels.com/photos/7904474/pexels-photo-7904474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750" alt="Female doctor holding a pen" loading="lazy">
                                     </div>
@@ -1967,14 +1903,14 @@
                             <p class="lead text-center animate__animated animate__fadeInUp animate__delay-0-5s">Our experienced and dedicated professionals are here to support your journey to wellness.</p>
                             <div class="slide-4-image-grid row justify-content-center mt-5">
                                 <div class="col-lg-4 col-md-6 mb-4 animate__animated animate__fadeInUp animate__delay-1s">
-                                    <div class="overlay-card" data-bs-toggle="modal" data-bs-target="#imageFullscreenModal" data-bs-src="https://images.pexels.com/photos/6129494/pexels-photo-6129494.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750">
-                                        <img src="https://images.pexels.com/photos/6129494/pexels-photo-6129494.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750" alt="Smiling healthcare professionals" class="img-fluid rounded-lg" loading="lazy">
+                                    <div class="overlay-card" data-bs-toggle="modal" data-bs-target="#imageFullscreenModal" data-bs-src="https://scontent.flhe2-3.fna.fbcdn.net/v/t39.30808-6/489405061_2066100710524151_8323451250716756408_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeF0oaiqWu-H-ZYyU8T8fpjII7q7QE6GlfQjurtAToaV9Al6tFrp5k8I5BVhL7-iCR-vbeFRAP-OJfunb1z3hBru&_nc_ohc=iVfa7UNj88gQ7kNvwGMTKZM&_nc_oc=AdkczWTfjz0_N8DnahBajy6ij31xjKl86faTpL3wiNF6ivbmRlR5obVEhd6TJyeNt2c&_nc_zt=23&_nc_ht=scontent.flhe2-3.fna&_nc_gid=8jRqWzvC9yXtq2qjjm6hsA&oh=00_AfoVzMyHhCJ5m9C357TB6CRdSbJqKjkB0Xkg-bC0ULdeRw&oe=697EA40D">
+                                        <img src="https://scontent.flhe2-3.fna.fbcdn.net/v/t39.30808-6/489405061_2066100710524151_8323451250716756408_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeF0oaiqWu-H-ZYyU8T8fpjII7q7QE6GlfQjurtAToaV9Al6tFrp5k8I5BVhL7-iCR-vbeFRAP-OJfunb1z3hBru&_nc_ohc=iVfa7UNj88gQ7kNvwGMTKZM&_nc_oc=AdkczWTfjz0_N8DnahBajy6ij31xjKl86faTpL3wiNF6ivbmRlR5obVEhd6TJyeNt2c&_nc_zt=23&_nc_ht=scontent.flhe2-3.fna&_nc_gid=8jRqWzvC9yXtq2qjjm6hsA&oh=00_AfoVzMyHhCJ5m9C357TB6CRdSbJqKjkB0Xkg-bC0ULdeRw&oe=697EA40D" alt="Smiling healthcare professionals" class="img-fluid rounded-lg" loading="lazy">
                                         <div class="card-text">Friendly Faces</div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6 mb-4 animate__animated animate__fadeInUp animate__delay-1-2s">
-                                    <div class="overlay-card shifted" data-bs-toggle="modal" data-bs-target="#imageFullscreenModal" data-bs-src="https://images.pexels.com/photos/9054999/pexels-photo-9054999.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750">
-                                        <img src="https://images.pexels.com/photos/9054999/pexels-photo-9054999.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750" alt="Medical professionals in scrub suits" class="img-fluid rounded-lg" loading="lazy">
+                                    <div class="overlay-card shifted" data-bs-toggle="modal" data-bs-target="#imageFullscreenModal" data-bs-src="https://scontent.flhe2-2.fna.fbcdn.net/v/t39.30808-6/489635535_2065717367229152_6004672005414687669_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE3xAS5AMEB3TAV14ymJH4XwMxoIuVIDQfAzGgi5UgNB0dDkv0M2mKreVcLCzt8uB1xif0lmLjp-nSrwxJy2asm&_nc_ohc=4eE4_C0OVS4Q7kNvwGWykGB&_nc_oc=AdkJBobQhV_ZnD4Y2TouPUQlasmguZ5ckDdtn1VUqLffbm3K19YQLnb-MVmFYuwn3s4&_nc_zt=23&_nc_ht=scontent.flhe2-2.fna&_nc_gid=cjB2Gwu3Xg8YwNgc5pI7Lw&oh=00_AfoWwX699MA7a86JyumD_b9iVRzAiZS7rXqQaX2wWzLxbw&oe=697EAEA4">
+                                        <img src="https://scontent.flhe2-2.fna.fbcdn.net/v/t39.30808-6/489635535_2065717367229152_6004672005414687669_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeE3xAS5AMEB3TAV14ymJH4XwMxoIuVIDQfAzGgi5UgNB0dDkv0M2mKreVcLCzt8uB1xif0lmLjp-nSrwxJy2asm&_nc_ohc=4eE4_C0OVS4Q7kNvwGWykGB&_nc_oc=AdkJBobQhV_ZnD4Y2TouPUQlasmguZ5ckDdtn1VUqLffbm3K19YQLnb-MVmFYuwn3s4&_nc_zt=23&_nc_ht=scontent.flhe2-2.fna&_nc_gid=cjB2Gwu3Xg8YwNgc5pI7Lw&oh=00_AfoWwX699MA7a86JyumD_b9iVRzAiZS7rXqQaX2wWzLxbw&oe=697EAEA4" alt="Medical professionals in scrub suits" class="img-fluid rounded-lg" loading="lazy">
                                         <div class="card-text">Skilled Professionals</div>
                                     </div>
                                 </div>
@@ -2107,181 +2043,33 @@
         </section>
       <!--video section -->
       
-        <!-- Clinic Insights (Videos) Section -->
-        <section id="insightsSection" class="section-padding">
-            <div class="container">
-                <div class="section-title text-center">
-                    <div class="subtitle">Clinic Insights</div>
-                    <h2 class="royal-font">Discover Khan Clinic Through Videos</h2>
-                </div>
-
-                <p class="text-center mb-5 video-description">
-                    Take a virtual tour of our clinic and see how we care for our patients.
-                </p>
-
-                <div class="row g-4">
-                    <div class="col-lg-6" data-aos="fade-right">
-                        <div class="video-container">
-                            <iframe
-                                src="https://www.youtube.com/embed/vD_F83I_M2Q"
-                                title="Virtual Tour"
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                        <p class="video-caption text-center mt-2">
-                            Virtual Tour: University Hospital Zurich
-                        </p>
-                    </div>
-
-                    <div class="col-lg-6" data-aos="fade-left">
-                        <div class="video-container">
-                            <iframe
-                                src="https://www.youtube.com/embed/j_rL1R-t68s"
-                                title="Clinic Life"
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                        <p class="video-caption text-center mt-2">
-                            A Day at Charité – Universitätsmedizin Berlin
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- DOCTOR SECTION -->
         <section class="section-padding" id="doctors">
             <div class="container">
                 <div class="section-title" data-aos="fade-up">
-                    <div class="subtitle">Our Doctors</div>
-                    <h2 class="royal-font">Meet Our Expert Medical Team</h2>
+                    <div class="subtitle">Our Specialist</div>
+                    <h2 class="royal-font">Meet Dr. Shahzad Khan</h2>
                 </div>
-                <div class="row g-4 justify-content-center">
-
-                    <!-- Doctor 1 (Male) -->
-                    <div class="col-12" data-aos="fade-up" data-aos-delay="100">
-                        <div class="doctor-profile-row">
-                            <div class="doctor-img-container">
-                                <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&auto=format&fit=crop&q=60" alt="Dr. Ahmed Khan - General Physician" class="doctor-img" loading="lazy">
-                            </div>
-                            <div class="doctor-info">
-                                <h3 class="doctor-name">Dr. Ahmed Khan</h3>
-                                <div class="doctor-credentials">MBBS, FCPS</div>
-                                <div class="doctor-specialty">General Physician</div>
-                                <div class="doctor-experience">
-                                    <i class="fas fa-award me-2"></i>10+ Years Clinical Experience
-                                </div>
-                                <p class="doctor-bio">
-                                    Dr. Ahmed Khan is a highly respected General Physician with extensive experience in diagnosing and treating a wide range of medical conditions, from common colds and flu to more complex chronic diseases. He is dedicated to providing personalized, evidence-based care and focuses strongly on preventive health, patient education, and promoting overall wellness for individuals and families.
-                                </p>
-                            </div>
-                        </div>
+                <div class="row justify-content-center align-items-center" id="single-doctor-profile">
+                    <div class="col-lg-6 order-lg-1 doctor-text-content" data-aos="fade-right" data-aos-delay="100">
+                        <h3>Dr. Shahzad Khan - Expertise in Short Stature Treatment</h3>
+                        <p>
+                            Dr. Shahzad Khan from Sujanpur is a dedicated medical professional widely recognized for his expertise in the treatment of short stature. With a strong focus on patient-centered care, he carefully evaluates each individual’s condition and provides practical, result-oriented treatment plans based on proven medical approaches. His work is guided by honesty, experience, and a deep understanding of growth-related concerns in both children and adults.
+                        </p>
+                        <p>
+                            Dr. Shahzad Khan believes that physical growth plays an important role in confidence and overall well-being, and his goal is to help patients achieve healthier growth outcomes in a safe and responsible manner.
+                        </p>
+                        <p class="mt-4 fw-bold">
+                            Question: Are you or your child struggling with height concerns and looking for a trusted, professional solution?
+                        </p>
+                        <a href="#appointment" class="btn btn-primary-custom mt-3">Book Consultation <i class="fas fa-calendar-alt ms-2"></i></a>
                     </div>
-
-                    <!-- Doctor 2 (Male) -->
-                    <div class="col-12" data-aos="fade-up" data-aos-delay="200">
-                        <div class="doctor-profile-row">
-                            <div class="doctor-img-container">
-                                <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&auto=format&fit=crop&q=60" alt="Dr. Usman Ali - Dermatologist" class="doctor-img" loading="lazy">
-                            </div>
-                            <div class="doctor-info">
-                                <h3 class="doctor-name">Dr. Usman Ali</h3>
-                                <div class="doctor-credentials">MBBS, MCPS (Dermatology)</div>
-                                <div class="doctor-specialty">Dermatologist & Skin Specialist</div>
-                                <div class="doctor-experience">
-                                    <i class="fas fa-award me-2"></i>9+ Years Experience in Dermatology
-                                </div>
-                                <p class="doctor-bio">
-                                    Dr. Usman Ali offers expert care for various skin conditions, including acne, eczema, psoriasis, dermatitis, hair loss, and other dermatological concerns. He is committed to helping patients achieve healthy and radiant skin through advanced diagnostic techniques, evidence-based treatments, and personalized skincare regimens tailored to individual needs.
-                                </p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 order-lg-2 doctor-img-container" data-aos="fade-left" data-aos-delay="200">
+                        <img src="https://scontent.flhe2-4.fna.fbcdn.net/v/t39.30808-6/489498343_2066182837182605_341098985712140845_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeF6fHG0KkVaxjhqpQ3iPJqLpGxStD6FAl6kbFK0PoUCXmvX1aU61DYIc4rAP1svHA6V9jCtLaSIBZv93WT_m66z&_nc_ohc=9jmxQPKrpScQ7kNvwEuBP4M&_nc_oc=AdncTjLv7euCcfGyU-9lWTlKQ0e6G1tudOUTTbpUpy-LVwZ2xrFYiRVvaWnhnlTttBA&_nc_zt=23&_nc_ht=scontent.flhe2-4.fna&_nc_gid=i2bvRuxO3-7DvKjWv6P1AA&oh=00_Afo6sFF4wMvd26kxKev0pt49Y36k6R_UbotEXLFZ4jZQNw&oe=697EB717" alt="Dr. Shahzad Khan" class="img-fluid rounded-3 doctor-profile-single-img" loading="lazy">
                     </div>
-
-                    <!-- Doctor 3 (Female) -->
-                    <div class="col-12" data-aos="fade-up" data-aos-delay="300">
-                        <div class="doctor-profile-row">
-                            <div class="doctor-img-container">
-                                <img src="https://images.pexels.com/photos/27523237/pexels-photo-27523237.jpeg" alt="Dr. Fatima Zahra - Pediatrician" class="doctor-img" loading="lazy">
-                            </div>
-                            <div class="doctor-info">
-                                <h3 class="doctor-name">Dr. Fatima Zahra</h3>
-                                <div class="doctor-credentials">MBBS, DCH</div>
-                                <div class="doctor-specialty">Pediatrician & Child Specialist</div>
-                                <div class="doctor-experience">
-                                    <i class="fas fa-award me-2"></i>7+ Years Experience in Child Healthcare
-                                </div>
-                                <p class="doctor-bio">
-                                    Dr. Fatima Zahra is a compassionate Pediatrician dedicated to the health and well-being of children from infancy through adolescence. She provides comprehensive care, including routine check-ups, vaccinations, growth and developmental monitoring, and expert advice for parents on child nutrition, safety, and common childhood illnesses. Her gentle approach ensures a comfortable experience for young patients.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Doctor 4 (Female) -->
-                    <div class="col-12" data-aos="fade-up" data-aos-delay="400">
-                        <div class="doctor-profile-row">
-                            <div class="doctor-img-container">
-                                <img src="https://images.pexels.com/photos/3845766/pexels-photo-3845766.jpeg" alt="Dr. Ayesha Imtiaz - General Surgeon" class="doctor-img" loading="lazy">
-                            </div>
-                            <div class="doctor-info">
-                                <h3 class="doctor-name">Dr. Ayesha Imtiaz</h3>
-                                <div class="doctor-credentials">MBBS, FCPS (General Surgery)</div>
-                                <div class="doctor-specialty">General Surgeon</div>
-                                <div class="doctor-experience">
-                                    <i class="fas fa-award me-2"></i>12+ Years Experience in Surgery
-                                </div>
-                                <p class="doctor-bio">
-                                    Dr. Ayesha Imtiaz is a skilled General Surgeon, providing consultations and performing minor surgical procedures within the clinic, such as excision of small lumps, wound debridement, and abscess drainage. She focuses on patient safety, meticulous surgical techniques, and effective post-operative recovery, specializing in common surgical conditions requiring outpatient care and offering expert pre-surgical evaluations.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Doctor 5 (Female) -->
-                    <div class="col-12" data-aos="fade-up" data-aos-delay="500">
-                        <div class="doctor-profile-row">
-                            <div class="doctor-img-container">
-                                <img src="https://images.pexels.com/photos/5717549/pexels-photo-5717549.jpeg" alt="Dr. Hina Khalid - Gynecologist" class="doctor-img" loading="lazy">
-                            </div>
-                            <div class="doctor-info">
-                                <h3 class="doctor-name">Dr. Hina Khalid</h3>
-                                <div class="doctor-credentials">MBBS, DGO</div>
-                                <div class="doctor-specialty">Gynecologist & Women Health Specialist</div>
-                                <div class="doctor-experience">
-                                    <i class="fas fa-award me-2"></i>8+ Years Experience in Women & Maternal Care
-                                </div>
-                                <p class="doctor-bio">
-                                    Dr. Hina Khalid specializes in women's health, offering expert gynecological care, comprehensive prenatal and postnatal services, family planning advice, and management of various women's health issues. She is known for her empathetic approach and unwavering commitment to empowering women through health education, personalized care, and comprehensive support at every life stage.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Doctor 6 (Female) -->
-                    <div class="col-12" data-aos="fade-up" data-aos-delay="600">
-                        <div class="doctor-profile-row">
-                            <div class="doctor-img-container">
-                                <img src="https://images.pexels.com/photos/27759912/pexels-photo-27759912.jpeg" alt="Dr. Sana Rehman - Pediatrician" class="doctor-img" loading="lazy">
-                            </div>
-                            <div class="doctor-info">
-                                <h3 class="doctor-name">Dr. Sana Rehman</h3>
-                                <div class="doctor-credentials">MBBS, DCH</div>
-                                <div class="doctor-specialty">Pediatrician & Child Specialist</div>
-                                <div class="doctor-experience">
-                                    <i class="fas fa-award me-2"></i>6+ Years Experience in Child Healthcare
-                                </div>
-                                <p class="doctor-bio">
-                                    Dr. Sana Rehman is a dedicated Pediatrician providing child healthcare services, including routine immunizations, thorough wellness checkups, and treatment for common childhood ailments. She ensures a caring, friendly, and supportive environment for children and their families, focusing on early development, preventative health measures, and effective health management from birth to adolescence.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </section>
-
         <!-- Services Section -->
         <section class="section-padding" id="services" style="background: var(--light-bg);">
             <div class="container">
@@ -2297,7 +2085,7 @@
                             </div>
                             <h3 class="service-title">General Medical Checkups</h3>
                             <p class="service-desc">Comprehensive health assessments, preventive care, and routine screenings to monitor your overall well-being and detect issues early, ensuring proactive health management.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('General Consultation', 1500)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('General Consultation')">Book Now</button>
                         </div>
                     </div>
 
@@ -2308,7 +2096,7 @@
                             </div>
                             <h3 class="service-title">Fever, Flu & Infection Treatment</h3>
                             <p class="service-desc">Prompt diagnosis and effective treatment for common illnesses, including viral fevers, influenza, and various bacterial infections, ensuring quick and complete recovery.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('Fever/Flu Treatment', 1200)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('Fever/Flu Treatment')">Book Now</button>
                         </div>
                     </div>
 
@@ -2319,7 +2107,7 @@
                             </div>
                             <h3 class="service-title">Blood Pressure & Diabetes Management</h3>
                             <p class="service-desc">Expert care, continuous monitoring, and personalized lifestyle guidance for chronic conditions like hypertension and diabetes, helping you maintain a healthy and balanced life.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('BP/Diabetes Management', 2000)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('BP/Diabetes Management')">Book Now</button>
                         </div>
                     </div>
 
@@ -2330,7 +2118,7 @@
                             </div>
                             <h3 class="service-title">Women Health & Gynecology Care</h3>
                             <p class="service-desc">Specialized services dedicated to women's reproductive health, including prenatal and postnatal care, effective family planning, and comprehensive gynecological consultations.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('Women\'s Health', 2500)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('Women\'s Health')">Book Now</button>
                         </div>
                     </div>
 
@@ -2341,7 +2129,7 @@
                             </div>
                             <h3 class="service-title">Child Health Consultation</h3>
                             <p class="service-desc">Caring pediatric consultations for your child's optimal growth, healthy development, routine immunizations, and effective treatment of common childhood illnesses.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('Pediatric Care', 2000)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('Pediatric Care')">Book Now</button>
                         </div>
                     </div>
 
@@ -2352,7 +2140,7 @@
                             </div>
                             <h3 class="service-title">Minor Medical Procedures</h3>
                             <p class="service-desc">Safe and efficient handling of minor injuries, precise wound dressings, careful sutures, and other small outpatient medical procedures performed with utmost care.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('Minor Procedures', 1800)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('Minor Procedures')">Book Now</button>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="700">
@@ -2362,7 +2150,7 @@
                             </div>
                             <h3 class="service-title">Respiratory Illness Treatment</h3>
                             <p class="service-desc">Accurate diagnosis and effective management of respiratory conditions like asthma, acute bronchitis, chronic obstructive pulmonary disease (COPD) exacerbations, and seasonal allergies for clear and comfortable breathing.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('Respiratory Treatment', 1600)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('Respiratory Treatment')">Book Now</button>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="800">
@@ -2372,7 +2160,7 @@
                             </div>
                             <h3 class="service-title">Orthopedic Consultation (Minor)</h3>
                             <p class="service-desc">Initial assessment and treatment for minor bone and joint issues, sprains, strains, muscle pain, and basic fracture care, with appropriate referrals for complex cases.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('Minor Orthopedic', 2200)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('Minor Orthopedic')">Book Now</button>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="900">
@@ -2382,7 +2170,7 @@
                             </div>
                             <h3 class="service-title">Neurological Screening (Basic)</h3>
                             <p class="service-desc">Basic screenings and initial evaluations for common neurological symptoms such as headaches, migraines, dizziness, vertigo, and nerve pain, with appropriate guidance and referrals.</p>
-                            <button class="service-btn btn-hero" onclick="bookService('Basic Neurological', 2500)">Book Now</button>
+                            <button class="service-btn btn-hero" onclick="bookService('Basic Neurological')">Book Now</button>
                         </div>
                     </div>
                 </div>
@@ -2780,13 +2568,13 @@
                     </div>
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
                         <div class="gallery-item">
-                            <img src="https://images.pexels.com/photos/4033177/pexels-photo-4033177.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Medical Equipment" loading="lazy">
+                            <img src="https://media.istockphoto.com/id/1419877131/photo/building-facade-of-a-hospital-in-commercial-and-business-district-under-blue-sky.jpg?s=612x612&w=0&k=20&c=wGxVbFSxljSZb_t_qROE4RwsCgssKbGlqawAtmQ88Ls=" alt="Medical Equipment" loading="lazy">
                             <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
                         <div class="gallery-item">
-                            <img src="https://images.pexels.com/photos/4226252/pexels-photo-4226252.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Doctor and Patient" loading="lazy">
+                            <img src="https://thumbs.dreamstime.com/z/close-up-building-facade-hospital-word-signage-against-blue-sky-209373742.jpg" alt="Doctor and Patient" loading="lazy">
                             <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
                         </div>
                     </div>
@@ -2819,7 +2607,7 @@
                                 <a href="tel:+923184195665" class="btn-primary-custom me-3 mb-3">
                                     <i class="fas fa-phone me-2"></i>Call Now
                                 </a>
-                                <a href="https://wa.me/923184195665" class="btn-whatsapp mb-3" target="_blank" rel="noopener noreferrer">
+                                <a href="https://wa.me/"923006398049 class="btn-whatsapp mb-3" target="_blank" rel="noopener noreferrer">
                                     <i class="fab fa-whatsapp me-2"></i>Book via WhatsApp
                                 </a>
                             </div>
@@ -2959,6 +2747,18 @@
                                 <p>khanclinic@gmail.com</p>
                             </div>
                         </div>
+                    </div>
+                    <!-- New SMS Contact Item -->
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                        <a href="sms:+923184195665?body=Hello Khan Clinic, I would like to inquire about..." class="contact-item" style="text-decoration: none; color: inherit;">
+                            <div class="contact-icon" style="background: var(--primary-blue);">
+                                <i class="fas fa-sms"></i>
+                            </div>
+                            <div class="contact-info">
+                                <h5>Send SMS</h5>
+                                <p>+92 318 4195665</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -3159,7 +2959,7 @@
                     <div class="col-lg-4 mb-4">
                         <h5 class="mb-3" style="color: var(--primary);">Connect With Us</h5>
                         <address style="color: rgba(255,255,255,0.7);">
-                            <p><i class="fas fa-phone me-2"></i><a href="tel:+923184195665" style="color: inherit; text-decoration: none;">+92 318 4195665</a></p>
+                            <p><i class="fas fa-phone me-2"></i><a href="tel:+923006398049" style="color: inherit; text-decoration: none;">+923006398049</a></p>
                             <p><i class="fas fa-envelope me-2"></i><a href="mailto:khanclinic@gmail.com" style="color: inherit; text-decoration: none;">khanclinic@gmail.com</a></p>
                             <p><i class="fas fa-map-marker-alt me-2"></i>Nishtar Hospital, Abdali Road, Multan</p>
                         </address>
@@ -3221,83 +3021,11 @@
             <a href="https://wa.me/923184195665" class="floating-btn whatsapp" target="_blank" rel="noopener noreferrer" title="WhatsApp Us" aria-label="WhatsApp Khan Clinic">
                 <i class="fab fa-whatsapp"></i>
             </a>
+            <a href="sms:+923184195665?body=Hello Khan Clinic, I would like to inquire about..." class="floating-btn sms" title="Send SMS" aria-label="Send SMS to Khan Clinic">
+                <i class="fas fa-sms"></i>
+            </a>
         </div>
     </main>
-
-    <!-- Authentication Modal -->
-    <div class="modal" id="authModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Welcome Back</h2>
-                <button class="modal-close" onclick="closeModal('authModal')">×</button>
-            </div>
-            <div id="authTabs">
-                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
-                    <button class="btn btn-primary-custom" style="flex: 1;" onclick="showAuthTab('login')">Login</button>
-                    <button class="btn btn-secondary" style="flex: 1; background-color: var(--light-gray); color: var(--dark);" onclick="showAuthTab('signup')">Sign Up</button>
-                </div>
-
-                <!-- Login Form -->
-                <form id="loginForm" style="display: block;">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="loginEmail" required placeholder="your@email.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="loginPassword" required placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="btn btn-primary-custom" style="width: 100%; margin-top: 1rem;">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                </form>
-
-                <!-- Signup Form -->
-                <form id="signupForm" style="display: none;">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>First Name</label>
-                            <input type="text" id="signupFirstName" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Last Name</label>
-                            <input type="text" id="signupLastName" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="signupEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Phone Number</label>
-                        <input type="tel" id="signupPhone" required placeholder="+92 300 1234567">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Age</label>
-                            <input type="number" id="signupAge" required min="1" max="120">
-                        </div>
-                        <div class="form-group">
-                            <label>Gender</label>
-                            <select id="signupGender" required>
-                                <option value="">Select</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="signupPassword" required minlength="6">
-                    </div>
-                    <button type="submit" class="btn btn-primary-custom" style="width: 100%; margin-top: 1rem;">
-                        <i class="fas fa-user-plus"></i> Create Account
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Appointment Modal -->
     <div class="modal" id="appointmentModal">
@@ -3311,15 +3039,15 @@
                     <label>Select Service</label>
                     <select id="appointmentService" required>
                         <option value="">Choose a service</option>
-                        <option value="General Consultation">General Consultation - PKR 1,500</option>
-                        <option value="Fever/Flu Treatment">Fever, Flu & Infection Treatment - PKR 1,200</option>
-                        <option value="BP/Diabetes Management">Blood Pressure & Diabetes Management - PKR 2,000</option>
-                        <option value="Women's Health">Women Health & Gynecology Care - PKR 2,500</option>
-                        <option value="Pediatric Care">Child Health Consultation - PKR 2,000</option>
-                        <option value="Minor Procedures">Minor Medical Procedures - PKR 1,800</option>
-                        <option value="Respiratory Treatment">Respiratory Illness Treatment - PKR 1,600</option>
-                        <option value="Minor Orthopedic">Orthopedic Consultation (Minor) - PKR 2,200</option>
-                        <option value="Basic Neurological">Neurological Screening (Basic) - PKR 2,500</option>
+                        <option value="General Consultation">General Consultation</option>
+                        <option value="Fever/Flu Treatment">Fever, Flu & Infection Treatment</option>
+                        <option value="BP/Diabetes Management">Blood Pressure & Diabetes Management</option>
+                        <option value="Women's Health">Women Health & Gynecology Care</option>
+                        <option value="Pediatric Care">Child Health Consultation</option>
+                        <option value="Minor Procedures">Minor Medical Procedures</option>
+                        <option value="Respiratory Treatment">Respiratory Illness Treatment</option>
+                        <option value="Minor Orthopedic">Orthopedic Consultation (Minor)</option>
+                        <option value="Basic Neurological">Neurological Screening (Basic)</option>
                     </select>
                 </div>
                 <div class="form-row">
@@ -3406,14 +3134,25 @@
 
     <script>
         // Global Variables for Firebase Integration
-        let currentUser = null;
         let selectedService = null;
         let selectedAmount = null;
         let currentAppointmentId = null; // To store the ID of the newly booked appointment
 
+        // Service Prices (kept internal for payment calculation)
+        const servicePrices = {
+            'General Consultation': 1500,
+            'Fever/Flu Treatment': 1200,
+            'BP/Diabetes Management': 2000,
+            'Women\'s Health': 2500,
+            'Pediatric Care': 2000,
+            'Minor Procedures': 1800,
+            'Respiratory Treatment': 1600,
+            'Minor Orthopedic': 2200,
+            'Basic Neurological': 2500
+        };
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            initializeAuth();
             initializeForms();
             initializeScrollEffects();
             setMinDate();
@@ -3423,7 +3162,7 @@
                 offset: 100
             });
 
-            // Initialize Medical Dictionary (Moved here to ensure diseaseData is defined)
+            // Initialize Medical Dictionary
             const alphabetBtns = document.querySelectorAll('.alphabet-btn');
             const diseaseListContainer = document.getElementById('diseaseListContainer');
             const diseaseList = document.getElementById('diseaseList');
@@ -3512,103 +3251,15 @@
             }
         });
 
-        // Authentication Functions
-        function initializeAuth() {
-            window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
-                currentUser = user;
-                updateUIForLoggedInUser();
-            });
-        }
-
-        function showAuthTab(tab) {
-            document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
-            document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
-            // Update button styles
-            document.querySelector('#authTabs button:nth-child(1)').classList.remove('btn-primary-custom', 'btn-secondary');
-            document.querySelector('#authTabs button:nth-child(2)').classList.remove('btn-primary-custom', 'btn-secondary');
-
-            if (tab === 'login') {
-                document.querySelector('#authTabs button:nth-child(1)').classList.add('btn-primary-custom');
-                document.querySelector('#authTabs button:nth-child(2)').classList.add('btn-secondary');
-                document.querySelector('#authTabs button:nth-child(2)').style.backgroundColor = 'var(--light-gray)';
-                document.querySelector('#authTabs button:nth-child(2)').style.color = 'var(--dark)';
-            } else {
-                document.querySelector('#authTabs button:nth-child(1)').classList.add('btn-secondary');
-                document.querySelector('#authTabs button:nth-child(1)').style.backgroundColor = 'var(--light-gray)';
-                document.querySelector('#authTabs button:nth-child(1)').style.color = 'var(--dark)';
-                document.querySelector('#authTabs button:nth-child(2)').classList.add('btn-primary-custom');
-            }
-        }
-
         function initializeForms() {
-            // Login Form
-            document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                showLoading(true);
-
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-
-                try {
-                    await window.firebase.signInWithEmailAndPassword(window.firebase.auth, email, password);
-                    showToast('Login successful!', 'success');
-                    closeModal('authModal');
-                } catch (error) {
-                    showToast(error.message, 'error');
-                } finally {
-                    showLoading(false);
-                }
-            });
-
-            // Signup Form
-            document.getElementById('signupForm')?.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                showLoading(true);
-
-                const email = document.getElementById('signupEmail').value;
-                const password = document.getElementById('signupPassword').value;
-                const userData = {
-                    firstName: document.getElementById('signupFirstName').value,
-                    lastName: document.getElementById('signupLastName').value,
-                    phone: document.getElementById('signupPhone').value,
-                    age: document.getElementById('signupAge').value,
-                    gender: document.getElementById('signupGender').value,
-                    createdAt: window.firebase.serverTimestamp()
-                };
-
-                try {
-                    const userCredential = await window.firebase.createUserWithEmailAndPassword(
-                        window.firebase.auth, email, password
-                    );
-
-                    await window.firebase.setDoc(
-                        window.firebase.doc(window.firebase.db, 'patients', userCredential.user.uid),
-                        { ...userData, email }
-                    );
-
-                    showToast('Account created successfully!', 'success');
-                    closeModal('authModal');
-                } catch (error) {
-                    showToast(error.message, 'error');
-                } finally {
-                    showLoading(false);
-                }
-            });
-
             // Appointment Form
             document.getElementById('appointmentForm')?.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                if (!currentUser) {
-                    showToast('Please login first to book an appointment!', 'error');
-                    openModal('authModal');
-                    return;
-                }
-
                 showLoading(true);
 
                 const appointmentData = {
-                    userId: currentUser.uid,
+                    // No userId as login is removed
                     service: document.getElementById('appointmentService').value,
                     date: document.getElementById('appointmentDate').value,
                     time: document.getElementById('appointmentTime').value,
@@ -3626,21 +3277,8 @@
                     );
                     currentAppointmentId = docRef.id; // Store appointment ID
 
-                    // Get service price from the service name
-                    const servicePrices = {
-                        'General Consultation': 1500,
-                        'Fever/Flu Treatment': 1200,
-                        'BP/Diabetes Management': 2000,
-                        'Women\'s Health': 2500,
-                        'Pediatric Care': 2000,
-                        'Minor Procedures': 1800,
-                        'Respiratory Treatment': 1600,
-                        'Minor Orthopedic': 2200,
-                        'Basic Neurological': 2500
-                    };
-
                     selectedService = appointmentData.service;
-                    selectedAmount = servicePrices[appointmentData.service] || 0;
+                    selectedAmount = servicePrices[appointmentData.service] || 0; // Get price from internal map
 
                     closeModal('appointmentModal');
                     showPaymentModal();
@@ -3662,13 +3300,8 @@
         }
 
         // Service Booking
-        function bookService(serviceName, price) {
-            if (!currentUser) {
-                showToast('Please login first!', 'error');
-                openModal('authModal');
-                return;
-            }
-
+        function bookService(serviceName) { // Removed 'price' argument
+            // No current user check needed as login is removed
             document.getElementById('appointmentService').value = serviceName;
             openModal('appointmentModal');
         }
@@ -3713,7 +3346,7 @@
 
             try {
                 // Upload payment proof
-                const storageRef = window.firebase.ref(window.firebase.storage, `payment_proofs/${currentUser.uid}/${currentAppointmentId}_${proofFile.name}`);
+                const storageRef = window.firebase.ref(window.firebase.storage, `payment_proofs/${currentAppointmentId}_${proofFile.name}`); // No currentUser.uid
                 await window.firebase.uploadBytes(storageRef, proofFile);
                 const proofUrl = await window.firebase.getDownloadURL(storageRef);
 
@@ -3746,31 +3379,7 @@
             }
         }
 
-        // UI Helper Functions
-        function updateUIForLoggedInUser() {
-            const authBtn = document.getElementById('patientAuthBtn');
-            if (currentUser) {
-                authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-                authBtn.onclick = logout;
-            } else {
-                authBtn.innerHTML = '<i class="fas fa-user"></i> Patient Login';
-                authBtn.onclick = () => openModal('authModal');
-            }
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.firebase.signOut(window.firebase.auth)
-                    .then(() => {
-                        showToast('Logged out successfully.', 'success');
-                        updateUIForLoggedInUser();
-                    })
-                    .catch((error) => {
-                        showToast('Error logging out: ' + error.message, 'error');
-                    });
-            }
-        }
-
+        // UI Helper Functions (cleaned up auth-related parts)
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             document.getElementById('toastMessage').textContent = message;
@@ -3832,15 +3441,6 @@
             const appointmentDateInput = document.getElementById('appointmentDate');
             if (appointmentDateInput) {
                 appointmentDateInput.min = today;
-            }
-        }
-
-        // Handler for patient auth button in navbar
-        function userAuthAction() {
-            if (currentUser) {
-                logout();
-            } else {
-                openModal('authModal');
             }
         }
 
@@ -3980,4 +3580,3 @@
     </script>
 </body>
 </html>
-
