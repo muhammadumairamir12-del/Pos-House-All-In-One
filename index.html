@@ -412,7 +412,16 @@ footer{background:var(--b900);color:#fff;padding:60px 24px 20px}
 @media(max-width:768px){
   .nav-links,.btn-cta-nav{display:none}
   .hamburger{display:flex}
+
+  /* --- MENU FIX LINES ADDED HERE --- */
+  .nav-inner { padding: 0 12px; gap: 8px; justify-content: space-between; }
+  .logo-text { font-size: 0.95rem; }
+  .logo-text span { display: none; }
+  .nav-right { gap: 8px; }
+  /* --------------------------------- */
+
   .hero-content{grid-template-columns:1fr;text-align:center}
+  
   .hero-visual{display:none}
   .hero-btns{justify-content:center}
   .hero-stats{justify-content:center}
